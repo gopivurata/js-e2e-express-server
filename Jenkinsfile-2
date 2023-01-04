@@ -1,5 +1,5 @@
 pipeline {
-    agent { label'jenkins-node' }
+    agent  { label 'node-1' }
     stages {
         stage('git') {
             steps {
@@ -10,15 +10,17 @@ pipeline {
         }
         stage('npm-install-build') {
             steps {
-                sh """sudo apt install nodejs -y
-                      sudo apt install npm -y
-                      export PATH=/home/ubuntu/.nvm/versions/node/v16.19.0/bin:$PATH
+                sh """export PATH=/home/ubuntu/.nvm/versions/node/v16.17.1/bin:$PATH
                       npm install
                       npm run build
                     """  
             }
         }
-        
+        stage('archive results') {
+            steps {
+                junit '**/surefire-reports/*.xml'
+            }
+        }
     }
 
 }
